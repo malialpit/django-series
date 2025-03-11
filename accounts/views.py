@@ -40,7 +40,7 @@ def signup(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('account:login')
+            return redirect('accounts:login')
     else:
         form = SignUpForm()
     return render(request, 'registration/signup.html', {'form': form})
