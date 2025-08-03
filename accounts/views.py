@@ -1,5 +1,7 @@
+from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import PasswordChangeForm
 from django.shortcuts import render, redirect
 
 from accounts.forms import SignUpForm
@@ -44,3 +46,19 @@ def signup(request):
     else:
         form = SignUpForm()
     return render(request, 'registration/signup.html', {'form': form})
+
+def admin_change_passsword(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(data=request.POST, user=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your password changed", extra_tags='green')
+            return redirect('accounts:dashboard')
+    else:
+        form = PasswordChangeForm(user=request.user)
+    return render(request, 'registration/password-change-form.html', {'form': form})
+
+
+def logout_view(request):
+    logout(request)
+    return redirect(settings.LOGIN_URL)
