@@ -17,21 +17,13 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.contrib.auth.views import LogoutView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, \
-    PasswordResetCompleteView
+from django.contrib.auth.views import LogoutView
 from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('account/', include('accounts.urls')),
-
-    # Password Reset
-    path('reset_password/', PasswordResetView.as_view(template_name="registration/password-reset.html"), name="password_reset"),
-    path('reset_password/done/', PasswordResetDoneView.as_view(template_name="registration/password-reset-done.html"), name="password_reset_done"),
-    path('reset_password/confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(template_name="registration/password-reset-confirm.html"), name="password_reset_confirm"),
-    path('reset_password/complete/', PasswordResetCompleteView.as_view(template_name="registration/password-reset-complete.html"), name="password_reset_complete"),
-
 
 ]
 
