@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.shortcuts import render, redirect
 
@@ -8,6 +9,7 @@ from accounts.forms import SignUpForm
 
 
 # Create your views here
+@login_required
 def dashboard(request):
     return render(request, 'base/base.html')
 

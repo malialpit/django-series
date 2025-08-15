@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Project Application
     'accounts',
+    'products',
     # Third-part libraries
     'phonenumber_field',
     'crispy_forms',
