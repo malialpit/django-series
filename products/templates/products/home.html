@@ -1,0 +1,218 @@
+{% extends 'user/home.html' %}
+
+{% block title %}Kalki Fashion{% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+{% block css %}
+
+<style>
+.fixed-size-image {
+    width: 300px;
+    height: 400px;
+    object-fit: cover;
+}
+</style>
+
+{% endblock %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'user/css/home.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'user/css/home-button.css' %}">
+<section class="bg0 p-t-23 p-b-140">
+    <div class="container ">
+        <div class="p-b-10">
+            <h3 class="ltext-103 cl5">
+                Product Overview
+            </h3>
+        </div>
+        <div class="tab01">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item p-b-10">
+                    <a class="nav-link active" data-toggle="tab" href="#best-seller" role="tab">Best Seller</a>
+                </li>
+                <li class="nav-item p-b-10">
+                    <a class="nav-link" data-toggle="tab" href="#new" role="tab">New Arrival</a>
+                </li>
+                <li class="nav-item p-b-10">
+                    <a class="nav-link" data-toggle="tab" href="#sale" role="tab">Sale</a>
+                </li>
+                <li class="nav-item p-b-10">
+                    <a class="nav-link" data-toggle="tab" href="#top-rate" role="tab">Top Rate</a>
+                </li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content p-t-50">
+                <div class="tab-pane fade show active" id="best-seller" role="tabpanel">
+                    <!-- Slide2 -->
+                    <div class="wrap-slick2">
+                        <div class="slick2">
+                            {%if page_obj %}
+                            {% for product in page_obj %}
+                            {% if product.label == 'B'%}
+                            <div class="item-slick2 p-l-15 p-r-15 p-t-15 p-b-15">
+                                <!-- Block2 -->
+                                <div class="block2">
+                                    <div class="block2-pic hov-img0">
+                                        {% if product.image %}
+                                        <img src="{{ product.image.url }}" alt="IMG-PRODUCT" class="fixed-size-image">
+                                        {% endif %}
+                                        <a href=""
+                                           class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 ">
+                                            Quick View
+                                        </a>
+                                    </div>
+                                    <div class="block2-txt flex-w flex-t p-t-14">
+                                        <div class="block2-txt-child1 flex-col-l ">
+                                            <a href=""
+                                               class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+                                                {{ product.title }}
+                                            </a>
+
+                                            <span class="stext-105 cl3">
+													{{ product.price }}
+												</span>
+
+                                        </div>
+                                        <a href=""
+                                           class="btn mb-3 mr-3 btn-indigo">
+                                            <button class="btn btn-dark-blue btn-rounded"> Buy Now </button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="new" role="tabpanel">
+                    <div class="wrap-slick2">
+                        <div class="slick2">
+                            {%if page_obj %}
+                            {% for product in page_obj %}
+                            {% if product.label == 'N' %}
+                            <div class="item-slick2 p-l-15 p-r-15 p-t-15 p-b-15">
+                                <!-- Block2 -->
+                                <div class="block2">
+                                    <div class="block2-pic hov-img0">
+                                        <img src="{{ product.image.url }}" alt="IMG-PRODUCT" class="fixed-size-image">
+                                        <a href="{% url 'products:detail_product' product.id %}"
+                                           class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 ">
+                                            Quick View
+                                        </a>
+                                    </div>
+                                    <div class="block2-txt flex-w flex-t p-t-14">
+                                        <div class="block2-txt-child1 flex-col-l ">
+                                            <a href="{% url 'products:detail_product' product.id %}"
+                                               class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+                                                {{ product.title }}
+                                            </a>
+
+                                            <span class="stext-105 cl3">
+													{{ product.price }}
+												</span>
+                                        </div>
+                                        <a href="{% url 'products:detail_product' product.id %}"
+                                           class="btn mb-3 mr-3 btn-indigo">
+                                            <button class="btn btn-dark-blue btn-rounded"> Buy Now </button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="sale" role="tabpanel">
+                    <div class="wrap-slick2">
+                        <div class="slick2">
+                            {%if page_obj %}
+                            {% for product in page_obj %}
+                            {% if product.label == 'S' %}
+                            <div class="item-slick2 p-l-15 p-r-15 p-t-15 p-b-15">
+                                <!-- Block2 -->
+                                <div class="block2">
+                                    <div class="block2-pic hov-img0">
+                                        <img src="{{ product.image.url }}" alt="IMG-PRODUCT" class="fixed-size-image">
+                                        <a href="{% url 'products:detail_product' product.id %}"
+                                           class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 ">
+                                            Quick View
+                                        </a>
+                                    </div>
+
+                                    <div class="block2-txt flex-w flex-t p-t-14">
+                                        <div class="block2-txt-child1 flex-col-l ">
+                                            <a href="{% url 'products:detail_product' product.id %}"
+                                               class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+                                                {{ product.title }}
+                                            </a>
+
+                                            <span class="stext-105 cl3">
+													{{ product.price }}
+												</span>
+                                        </div>
+                                        <a href="{% url 'products:detail_product' product.id %}"
+                                           class="btn mb-3 mr-3 btn-indigo">
+                                            <button class="btn btn-dark-blue btn-rounded"> Buy Now </button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="top-rate" role="tabpanel">
+                    <div class="wrap-slick2">
+                        <div class="slick2">
+                            {%if page_obj %}
+                            {% for product in page_obj %}
+                            {% if product.label == 'T' %}
+                            <div class="item-slick2 p-l-15 p-r-15 p-t-15 p-b-15">
+                                <!-- Block2 -->
+                                <div class="block2">
+                                    <div class="block2-pic hov-img0">
+                                        <img src="{{ product.image.url }}" alt="IMG-PRODUCT" class="fixed-size-image">
+                                        <a href="{% url 'products:detail_product' product.id %}"
+                                           class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 ">
+                                            Quick View
+                                        </a>
+                                    </div>
+
+                                    <div class="block2-txt flex-w flex-t p-t-14">
+                                        <div class="block2-txt-child1 flex-col-l ">
+                                            <a href="{% url 'products:detail_product' product.id %}"
+                                               class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+                                                {{ product.title }}
+                                            </a>
+
+                                            <span class="stext-105 cl3">
+													{{ product.price }}
+												</span>
+                                        </div>
+                                        <a href="{% url 'products:detail_product' product.id %}"
+                                           class="btn mb-3 mr-3 btn-indigo">
+                                            <button class="btn btn-dark-blue btn-rounded"> Buy Now </button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -24,8 +24,8 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('', include('accounts.urls')),
-    path('products/', include('products.urls')),
+    path('account/', include('accounts.urls')),
+    path('', include('products.urls')),
 
     # Password Reset
     path('reset_password/', PasswordResetView.as_view(template_name="registration/password-reset.html"), name="password_reset"),

@@ -1,0 +1,59 @@
+{% extends 'base/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{%block title %}Add Slider{%endblock%}
+
+{% block breadcrumbs %}
+<li>
+    <div class="flex items-center">
+        <svg aria-hidden="true" class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20"
+             xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd"
+                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                  clip-rule="evenodd"></path>
+        </svg>
+        <a href="{% url 'products:slider' %}"
+           class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">Sliders</a>
+    </div>
+</li>
+<li>
+    <div class="flex items-center">
+        <svg aria-hidden="true" class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20"
+             xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd"
+                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                  clip-rule="evenodd"></path>
+        </svg>
+        <a href=""
+           class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">Add Slider</a>
+    </div>
+</li>
+
+
+{% endblock %}
+{% block content %}
+<div class="container px-6 mx-auto grid">
+    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200"> Sliders </h2>
+    <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300"> Add Slider </h4>
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+        <form class="" id="id-productform" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% crispy form %}
+            <br>
+            <button type="submit" form="id-productform"
+                    class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+                Save
+            </button>
+            <button type="reset" form="id-productform"
+                    class="text-gray-900 bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+                Reset
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock%}
+
+{%block js%}
+
+{% endblock %}

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+	<title>{% block title %}{% endblock %}</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" type="image/png" href="{% static 'user/images/icons/favicon.png' %}"/>
+	{% include 'user/css.html' %}
+	{% block css %}{% endblock %}
+</head>
+<body class="animsition">
+	<!-- Header -->
+    {% include 'user/header.html' %}
+	{% block content %}{% endblock%}
+	<!-- Footer -->
+    {% include 'user/footer.html' %}
+	<!-- Back to top -->
+	<div class="btn-back-to-top" id="myBtn">
+		<span class="symbol-btn-back-to-top">
+			<i class="zmdi zmdi-chevron-up"></i>
+		</span>
+	</div>
+    {% include 'user/js.html' %}
+    {% block js %}{% endblock %}
+</body>
+</html>
