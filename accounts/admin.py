@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from accounts.models import User
+from accounts.models import User, Contact
 
 
 # Register your models here.
@@ -14,3 +14,5 @@ class CustomUserAdmin(UserAdmin):
     search_fields = ('email', )
     ordering = ('email', )
     readonly_fields = ['email', 'phone_number']
+
+admin.site.register(Contact)

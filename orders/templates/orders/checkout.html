@@ -1,0 +1,209 @@
+{% extends 'user/base.html' %}
+
+{% block title %}Checkout{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<section class="checkout spad">
+    <div class="container">
+        <div class="checkout__form">
+            <!-- ONE FORM FOR EVERYTHING -->
+            <form action="{% url 'orders:checkout' %}" method="POST" id="checkout">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-lg-8 col-md-6">
+                        <h6 class="coupon__code"><span class="icon_tag_alt"></span>
+                            Now You can check-out with all payment methods</h6>
+                        <h6 class="checkout__title">Billing Details</h6>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>First Name<span>*</span></p>
+                                    {{ form.first_name }}
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Last Name<span>*</span></p>
+                                    {{ form.last_name }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="checkout__input">
+                            <p>Address<span>*</span></p>
+                            {{ form.street_address }}
+                        </div>
+
+                        <div class="checkout__input">
+                            <p>Country<span>*</span></p>
+                            {{ form.country }}
+                        </div>
+
+                        <div class="checkout__input">
+                            <p>State<span>*</span></p>
+                            {{ form.state }}
+                        </div>
+
+                        <div class="checkout__input">
+                            <p>Town/City<span>*</span></p>
+                            {{ form.city }}
+                        </div>
+
+                        <div class="checkout__input">
+                            <p>Postcode / ZIP<span>*</span></p>
+                            {{ form.zip }}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Phone<span>*</span></p>
+                                    {{ form.phone_number }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="checkout__input__checkbox">
+                            <input {% if form.same_shipping_address.value %}checked{% endif %}
+                                   type="checkbox" id="same_shipping_address" name="same_shipping_address">
+                            <label for="same_shipping_address">Shipping address is the same as my billing address</label>
+                        </div>
+
+                        <div class="checkout__input">
+                            <p>Order notes</p>
+                            {{ form.notes }}
+                        </div>
+
+                        <div class="col-lg-12 col-md-6">
+                            <h6 class="coupon__code"><span class="icon_tag_alt"></span> <b>Shipping Details</b></h6>
+
+                            <div class="checkout__input" id="id_s_street_address">
+                                <p>Address<span>*</span></p>
+                                {{ form.s_street_address }}
+                            </div>
+
+                            <div class="checkout__input" id="id_s_apartment_address">
+                                <p>Address 2<span>(Optional)</span></p>
+                                {{ form.s_apartment_address }}
+                            </div>
+
+                            <div class="checkout__input" id="id_s_city">
+                                <p>Town/City<span>*</span></p>
+                                {{ form.s_city }}
+                            </div>
+
+                            <div class="checkout__input" id="id_s_state">
+                                <p>State<span>*</span></p>
+                                {{ form.s_state }}
+                            </div>
+
+                            <div class="checkout__input" id="id_s_zip">
+                                <p>Postcode / ZIP<span>*</span></p>
+                                {{ form.s_zip }}
+                            </div>
+
+                            <div class="checkout__input" id="id_s_country">
+                                <p>Country<span>*</span></p>
+                                {{ form.s_country }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="checkout__order" id="order-summary">
+                            <h4 class="order__title">Your order</h4>
+                            <div class="checkout__order__products">Products <span>Total</span></div>
+
+                            <div id="order-items">
+                                {% for item in order_items %}
+                                    <ul class="checkout__total__products">
+                                        <li>{{ forloop.counter }}. {{ item.product.title }} x {{ item.quantity }}
+                                            <span>{{ item.get_final_price }}</span>
+                                        </li>
+                                    </ul>
+                                {% empty %}
+                                    <p>No items.</p>
+                                {% endfor %}
+                            </div>
+
+                            <ul class="checkout__total__all">
+                                <li>Subtotal <span id="subtotal">{{ subtotal }}</span></li>
+                                {% if order.coupon %}
+                                    <li id="discount-row">Promo code ({{ order.coupon.code }})
+                                        <span id="discount">-{{ discount }}</span></li>
+                                {% else %}
+                                    <li id="discount-row" style="display:none;">Promo code
+                                        <span id="discount"></span></li>
+                                {% endif %}
+                                <li>Total <span id="total">{{ total }}</span></li>
+                            </ul>
+                                <div class="checkout__coupon">
+                                    {{ couponform.code }}
+                                    <button type="button" id="apply-coupon" class="site-btn">Redeem</button>
+                                    <p id="coupon-message" style="color:red;"></p>
+                                </div>
+                            <button type="submit" value="1" class="site-btn">PLACE ORDER</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block js %}
+<script>
+    $(document).ready(function () {
+        // Copy billing to shipping
+        $('#same_shipping_address').change(function () {
+            if ($(this).is(':checked')) {
+                $('#id_s_street_address input').val($('#id_street_address').val());
+                $('#id_s_apartment_address input').val($('#id_apartment_address').val());
+                $('#id_s_zip input').val($('#id_zip').val());
+                $('#id_s_state input, #id_s_state select').val($('#id_state').val());
+                $('#id_s_city input').val($('#id_city').val());
+                $('#id_s_country input, #id_s_country select').val($('#id_country').val());
+            } else {
+                $('#id_s_street_address input').val('');
+                $('#id_s_apartment_address input').val('');
+                $('#id_s_city input').val('');
+                $('#id_s_state input, #id_s_state select').val('');
+                $('#id_s_zip input').val('');
+                $('#id_s_country input, #id_s_country select').val('');
+            }
+        });
+
+        // Apply coupon via AJAX
+        $('#apply-coupon').click(function () {
+            let code = $('#id_code').val(); // couponform.code renders with id="id_code"
+            $.ajax({
+                url: "{% url 'orders:coupon' %}",
+                type: "POST",
+                data: {
+                    code: code,
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                },
+                success: function (response) {
+                    if (response.valid) {
+                        $("#discount-row").show();
+                        $("#discount").text("-" + response.discount);
+                        $("#total").text(response.total);
+                        $("#coupon-message").css("color", "green").text("Coupon applied!");
+                    } else {
+                        $("#coupon-message").css("color", "red").text(response.error);
+                    }
+                },
+                error: function () {
+                    $("#coupon-message").css("color", "red").text("Something went wrong.");
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

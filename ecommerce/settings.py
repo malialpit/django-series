@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     # Project Application
     'accounts',
     'products',
+    'orders',
     # Third-part libraries
     'phonenumber_field',
     'crispy_forms',
@@ -151,3 +152,6 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = os.getenv('EMAIL_PORT')
 EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
+
+RAZORPAY_ID = os.getenv('RAZORPAY_ID')
+RAZORPAY_ACCOUNT_ID = os.getenv('RAZORPAY_ACCOUNT_ID')

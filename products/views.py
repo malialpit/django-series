@@ -1,12 +1,14 @@
 import os
 
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
 
+from orders.models import Order, Cart
 from products.forms import CategoryForm, ProductForm, SliderForm
 from products.models import Category, Product, Slider
 
@@ -103,6 +105,11 @@ def delete_product(request, id):
     return redirect('products:product')
 
 
+def quick_product(request, id):
+    context = {'products': Product.objects.filter(pk=id)}
+    return render(request, "products/quick-view.html", context)
+
+
 @login_required()
 def add_slider(request):
     if request.method == 'POST':
@@ -118,13 +125,13 @@ def add_slider(request):
 @login_required
 def slider(request):
     sliders = Slider.objects.all()
-    context = {'sliders': sliders,}
+    context = {'sliders': sliders, }
     return render(request, 'products/slider.html', context)
 
 
 def home_slider(request):
     sliders = Slider.objects.all()
-    context = {'sliders': sliders,}
+    context = {'sliders': sliders, }
     return render(request, 'user/slider.html', context)
 
 
@@ -142,3 +149,52 @@ class UpdateSlider(LoginRequiredMixin, generic.UpdateView):
         context['slide_2'] = os.path.basename(slider.slide_2.name)
         context['slide_3'] = os.path.basename(slider.slide_3.name)
         return context
+
+
+@login_required
+def add_to_cart(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    cart_item, created = Cart.objects.get_or_create(
+        user=request.user,
+        product=product,
+    )
+    if not created:
+        cart_item.quantity += 1
+        cart_item.save()
+        messages.success(request, f"Updated quantity for {product.title}")
+    else:
+        messages.success(request, f"Added {product.title} to cart")
+
+    return redirect("products:cart_detail")  # redirect to cart page
+
+
+@login_required
+def remove_cart(request):
+    Cart.objects.filter(user=request.user).delete()
+    messages.success(request, "Your cart has been cleared")
+    return redirect("products:cart_detail")
+
+
+@login_required
+def remove_cart_item(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    cart_item = Cart.objects.filter(user=request.user, product=product).first()
+
+    if cart_item:
+        if cart_item.quantity > 1:
+            cart_item.quantity -= 1
+            cart_item.save()
+            messages.success(request, f"Decreased quantity for {product.title}")
+        else:
+            cart_item.delete()
+            messages.success(request, f"{product.title} removed from cart")
+    else:
+        messages.warning(request, f"{product.title} was not in your cart")
+
+    return redirect("products:cart_detail")
+
+@login_required
+def cart_detail(request):
+    cart_items = Cart.objects.filter(user=request.user)
+    total_price = sum(item.product.discount_price * item.quantity for item in cart_items)
+    return render(request, "products/cart.html", {"cart_items": cart_items, "total_price": total_price})

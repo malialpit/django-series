@@ -62,3 +62,12 @@ class User(AbstractBaseUser):
     @property
     def is_staff(self):
         return self.is_admin
+
+
+class Contact(models.Model):
+    email = models.EmailField(max_length=100)
+    phone_number = models.CharField(max_length=14)
+    message = models.TextField(max_length=500)
+
+    def __str__(self):
+        return self.email

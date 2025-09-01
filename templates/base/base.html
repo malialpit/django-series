@@ -10,6 +10,7 @@
 </head>
 </html>
 <body>
+{% block js %}{% endblock %}
 <div class="flex h-screen bg-gray-50 dark:bg-gray-900" :class="{ 'overflow-hidden': isSideMenuOpen }">
     {% include 'base/sidebar.html' %}
     {% include 'base/mobile-sidebar.html' %}

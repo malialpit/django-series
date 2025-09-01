@@ -1,4 +1,5 @@
 {% load static %}
+{% load template_tags %}
 
 <header>
     <!-- Header desktop -->
@@ -17,23 +18,23 @@
                             <a href="">Home</a>
                         </li>
                         <li>
-                            <a href="">My Orders</a>
+                            <a href="{% url 'orders:orders' %}">My Orders</a>
                         </li>
                         <li class="label1" data-label1="hot">
-                            <a href="">Checkout</a>
+                            <a href="{% url 'orders:checkout' %}">Checkout</a>
                         </li>
 <!--                        <li>-->
 <!--                            <a href="#">Blog</a>-->
 <!--                        </li>-->
                         <li>
-                            <a href="">About</a>
+                            <a href="{% url 'accounts:about' %}">About</a>
                         </li>
                         <li>
-                            <a href="">Contact Us</a>
+                            <a href="{% url 'accounts:contact' %}">Contact Us</a>
                         </li>
-                        <li>
+                         <li>
                             {% if user.is_authenticated %}
-                            <a href="">
+                            <a href="{% url 'accounts:user-change-password' %}">
                                 Change Password
                             </a>
                         </li>
@@ -61,10 +62,10 @@
                     <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
                         <i class="zmdi zmdi-search"></i>
                     </div>
-                    {% if request.user.is_authenticated %}
-                    <a href=""
+                     {% if request.user.is_authenticated %}
+                    <a href="{% url 'products:cart_detail' %}"
                        class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart"
-                       data-notify="">
+                       data-notify="{{ request.user|cart_item_count }}">
                         <i class="zmdi zmdi-shopping-cart"></i>
                     </a>
                     {% endif %}

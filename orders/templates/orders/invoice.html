@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <title>Invoice Kalki Fashion</title>
+    <style>
+  .clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+a {
+  text-decoration: underline;
+}
+
+body {
+  position: relative;
+  margin: 0 auto;
+  color: #001028;
+  background: #FFFFFF;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  font-family: Arial;
+}
+
+header {
+  padding: 10px 0;
+  margin-bottom: 30px;
+}
+
+#logo {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+#logo img {
+  width: 90px;
+}
+
+h1 {
+
+  color: #5D6975;
+  font-size: 2.4em;
+  line-height: 1.4em;
+  font-weight: normal;
+  text-align: center;
+  margin: 0 0 20px 0;
+}
+
+#project {
+  float: left;
+}
+
+
+#project span {
+  color: #5D6975;
+  text-align: right;
+  width: 52px;
+  margin-right: 10px;
+  display: inline-block;
+  font-size: 14px;
+}
+
+#company {
+  float: right;
+  text-align: right;
+}
+#project {
+  float: left;
+}
+
+
+#project1 span {
+  color: #5D6975;
+  text-align: right;
+  width: 52px;
+  margin-right: 10px;
+  display: inline-block;
+  font-size: 14px;
+}
+
+#company1 {
+  float: right;
+  text-align: right;
+}
+#shipping {
+  float: right;
+  text-align: right;
+  white-space: nowrap;
+
+}
+
+#billing {
+  float: left;
+  text-align: left;
+  white-space: nowrap;
+
+}
+
+#project div,
+#company div {
+  white-space: nowrap;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-bottom: 20px;
+}
+
+
+
+table th,
+table td {
+  text-align: center;
+}
+
+table th {
+
+
+  color: #5D6975;
+  border-bottom: 1px solid #C1CED9;
+  white-space: nowrap;
+  font-weight: normal;
+}
+
+table .service,
+table .desc {
+  text-align: left;
+}
+
+table td {
+ padding-top:5px;
+ padding-bottom:5px;
+
+}
+
+table tr {
+  border-bottom: 1px solid #C1CED9;
+}
+
+table td.service,
+table td.desc {
+  vertical-align: top;
+}
+
+table td.unit,
+table td.qty,
+table td.total {
+  font-size: 1.2em;
+}
+
+table td.grand {
+  border-top: 1px solid #5D6975;;
+}
+
+#notices .notice {
+  color: #5D6975;
+  font-size: 1.2em;
+}
+
+footer {
+  color: #5D6975;
+  width: 100%;
+  height: 30px;
+  position: absolute;
+  bottom: 0;
+  border-top: 1px solid #C1CED9;
+  padding: 8px 0;
+  text-align: center;
+}
+
+
+.grid {
+    display: grid;
+}
+
+.grid-cols-2 {
+    grid-template-columns: 1fr 1fr;
+}
+
+.gap-10 {
+    gap: 10px;
+}
+
+.flex {
+    display: flex;
+    flex-direction: column;
+}
+
+.mb-4 {
+    margin-bottom: 1rem;
+}
+
+.text-xl {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.text-gray-600 {
+    color: #718096;
+}
+
+
+
+
+
+    </style>
+</head>
+
+<body>
+<header class="clearfix">
+    <div id="logo" style="display:flex; justify-content:center; align-items:center;">
+        <img src="static/user/images/icons/kalkifashion.png" class="brand-logo" height="200px">
+    </div>
+    <h1>INVOICE</h1>
+    <div id="company" class="clearfix">
+        <div>Kalki Fashion</div>
+        <div><a href="mailto:company@example.com">company@example.com</a></div>
+        <div><a href="www.kalkifashion.com">www.kalkifashion.com</a></div>
+        <!--        <div><p class="text-gray-600">Address :183, Hari om industry-1,</p><p class="text-gray-600"> near milan point, bamroli, surat - 395023, Gujarat, India</p></div>-->
+    </div>
+    <div id="project">
+        <div><span>CLIENT:</span>{{first_name}} {{last_name}}</div>
+        <div><span>EMAIL:</span> <a href="mailto:{{user_email}}">{{user_email}}</a></div>
+        <div><span>PHONE NUMBER:</span> <a href="tel:{{phone_number}}">{{ phone_number }}</a></div>
+        <div><span>DATE:</span> {{date}}</div>
+        <div><span>INVOICE ID:</span>{{order_id}}</div>
+        <div><span>TRANSACTION ID:</span> {{transaction_id}}</div>
+    </div>
+     <div id="company1" class="clearfix">
+         <div><h3 class="text-xl font-semibold mb-4">Billing Address</h3></div>
+        <div><p class="text-gray-600">{{first_name}} {{ last_name }}</p></div>
+        <div><p class="text-gray-600">{{ billing_address }}</p></div>
+       <div><p class="text-gray-600">{{ city }}<b>,</b> {{ state }}<b>,</b> {{ country }}</p></div>
+        <div><p class="text-gray-600">{{ phone_number }}</p></div>
+
+    </div>
+    <div id="project1">
+       <div> <h3 class="text-xl font-semibold mb-4">Shipping Address</h3></div>
+      <div><p class="text-gray-600">{{first_name}} {{ last_name }}</p></div>
+        <div><p class="text-gray-600">{{ billing_address }}</p></div>
+        <div><p class="text-gray-600">{{ city }}<b>,</b> {{ state }}<b>,</b> {{ country }}</p></div>
+       <div><p class="text-gray-600">{{ phone_number }}</p></div>
+
+    </div>
+</header>
+<br>
+<div class="table-container" style="overflow-x:auto">
+    <table class="table" style="width:100%">
+        <thead>
+        <tr>
+            <th scope="col">PRODUCT</th>
+            <th scope="col">QUANTITY</th>
+            <th scope="col">ORIGINAL PRICE</th>
+            <th scope="col">DISCOUNT PRICE</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for order_item in items %}
+        <tr>
+            <td scope="row">{{order_item.product.title}}</td>
+            <td>{{ order_item.quantity }}</td>
+            <td>{{ order_item.product.price }}</td>
+            <td>{{ order_item.product.discount_price}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <p class="text-xl">Subtotal: {{ sub_total }}</p>
+    <p class="text-xl">Discount: {{ discount }}</p>
+    <p class="text-xl">Total: {{ total }}</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,95 @@
+{% extends 'user/base.html' %}
+
+{% block title %}Shopping Cart{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+{% load static %}
+<br>
+<br>
+<style>
+    .table-shopping-cart {
+    width: 170%;
+    overflow-x: auto;
+}
+</style>
+<form class="bg0 p-t-75 p-b-85">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
+                <div class="m-l-25 m-r--38 m-lr-0-xl">
+                    <div class="wrap-table-shopping-cart">
+                        <table class="table-shopping-cart">
+                            <tr class="table_head">
+                                <th class="column-1">Product</th>
+                                <th class="column-2"></th>
+                                <th class="column-3">Original Price</th>
+                                <th class="column-4">Discount Price</th>
+                                <th class="column-5">Quantity</th>
+                                <th class="column-6">Total</th>
+                                <th class="column-7">Action</th>
+                            </tr>
+                            {% for cart in cart_items %}
+                            <tr class="table_row">
+                                <td class="column-1">
+                                    <div class="how-itemcart1">
+                                        <img src="{{ cart.product.image.url }}" alt="IMG">
+                                    </div>
+                                </td>
+                                <td class="column-2">{{ cart.product.title}}</td>
+                                <td class="column-3" style="text-decoration: line-through; color:red;">{{ cart.product.price}}<i class="fas fa-regular fa-tags fa-bounce" style="color: red;"></i></td>
+                                <td class="column-4">{{ cart.get_discount_product_price}}</td>
+                                <td class="column-5">
+                                    <div class="wrap-num-product flex-w">
+                                        <a href="{% url 'products:remove_cart_item' cart.product.id %}"
+                                           class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
+                                            <i class="fs-16 zmdi zmdi-minus"></i>
+                                        </a>
+                                        <input class="mtext-104 cl3 txt-center num-product" type="number"
+                                               name="num-product1" value="{{ cart.quantity }}">
+                                        <a href="{% url 'products:add_to_cart'  cart.product.id%}"
+                                           class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
+                                            <i class="fs-16 zmdi zmdi-plus"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                                <td class="column-6">
+                                    {{ cart.get_final_price}}
+                                </td>
+                                <td class="column-7">
+                                    <a style="color:black;"
+                                       href="{% url 'products:remove_cart' %}">
+                                        <i class="fas fa-thin fa-xmark fa-beat-fade"></i> </a>
+                                </td>
+                                {% empty %}
+                                <td>
+                                    Your Cart is Empty!
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                        <div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm">
+                            <a style="color:white;"
+                               href="{% url 'orders:checkout' %}"
+                               class="flex-c-m stext-101 cl0 size-119 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer m-tb-10">
+                                Proceed to Checkout
+                            </a>
+                            <p class="column-6">
+                                <strong>Subtotal:</strong> ₹{{ total_price }}
+                            </p>
+                        </div>
+                        <div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm">
+							<a style="color:white;"  href="{% url 'products:home' %}" class="flex-c-m stext-101 cl0 size-119 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer m-tb-10">
+								Continue Shopping
+							</a>
+						</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+{% endblock %}

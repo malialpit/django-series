@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
-from accounts.models import User
+from accounts.models import User, Contact
 
 
 class SignUpForm(forms.ModelForm):
@@ -80,3 +80,25 @@ class SignUpForm(forms.ModelForm):
             user.save()
         return user
 
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = Contact
+        fields = ['email', 'phone_number', 'message']
+        widgets = {
+            'email': forms.TextInput(attrs={
+                'class': 'stext-111 cl2 plh3 size-116 p-l-62 p-r-30',
+                'placeholder': 'Your Email Address'}),
+            'phone_number': forms.TextInput(attrs={
+                'class': 'stext-111 cl2 plh3 size-116 p-l-62 p-r-30',
+                'placeholder': 'Your Phone Number'}),
+            'message': forms.TextInput(attrs={
+                'class': 'stext-111 cl2 plh3 size-120 p-lr-28 p-tb-25',
+                'placeholder': 'How Can We Help?'}),
+
+        }
+
+        labels = {
+            'email': 'Email Address',
+            'phone_number': 'Phone Number',
+            'message': 'Message'
+        }

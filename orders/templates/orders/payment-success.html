@@ -1,0 +1,28 @@
+{% extends 'orders/payment-base.html' %}
+{% load static %}
+{% block title %}
+
+{% endblock %}
+{% block css %}
+<style>
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="info">
+    <div class="container" style="text-align:center;">
+        <h1>Payment Success</h1>
+        <br>
+        <h3>Congratulations! You have successfully done the payment. Your order will reach to you in 5 days.</h3>
+        <a class="btn btn-primary btn-lg signup-button" href="{% url 'orders:generate_invoice' order_id=order.order_id %}">Print Invoice</a>&nbsp;&nbsp;
+        <a class="btn btn-dark btn-lg signup-button" href="{% url 'products:home' %}">Back to Home</a>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+<script>
+
+</script>
+{% endblock %}
