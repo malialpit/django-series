@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     # Project Application
     'accounts',
     'products',
+    'orders',
     # Third-part libraries
     'phonenumber_field',
     'crispy_forms',

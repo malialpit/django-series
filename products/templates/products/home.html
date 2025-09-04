@@ -59,14 +59,14 @@
                                         {% if product.image %}
                                         <img src="{{ product.image.url }}" alt="IMG-PRODUCT" class="fixed-size-image">
                                         {% endif %}
-                                        <a href=""
+                                        <a href="{% url 'products:quick_product' product.id %}"
                                            class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 ">
                                             Quick View
                                         </a>
                                     </div>
                                     <div class="block2-txt flex-w flex-t p-t-14">
                                         <div class="block2-txt-child1 flex-col-l ">
-                                            <a href=""
+                                            <a href="{% url 'products:quick_product' product.id %}"
                                                class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
                                                 {{ product.title }}
                                             </a>
@@ -76,10 +76,6 @@
 												</span>
 
                                         </div>
-                                        <a href=""
-                                           class="btn mb-3 mr-3 btn-indigo">
-                                            <button class="btn btn-dark-blue btn-rounded"> Buy Now </button>
-                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -100,14 +96,14 @@
                                 <div class="block2">
                                     <div class="block2-pic hov-img0">
                                         <img src="{{ product.image.url }}" alt="IMG-PRODUCT" class="fixed-size-image">
-                                        <a href="{% url 'products:detail_product' product.id %}"
+                                        <a href="{% url 'products:quick_product' product.id %}"
                                            class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 ">
                                             Quick View
                                         </a>
                                     </div>
                                     <div class="block2-txt flex-w flex-t p-t-14">
                                         <div class="block2-txt-child1 flex-col-l ">
-                                            <a href="{% url 'products:detail_product' product.id %}"
+                                            <a href="{% url 'products:quick_product' product.id %}"
                                                class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
                                                 {{ product.title }}
                                             </a>
@@ -116,7 +112,7 @@
 													{{ product.price }}
 												</span>
                                         </div>
-                                        <a href="{% url 'products:detail_product' product.id %}"
+                                        <a href=""
                                            class="btn mb-3 mr-3 btn-indigo">
                                             <button class="btn btn-dark-blue btn-rounded"> Buy Now </button>
                                         </a>
@@ -140,7 +136,7 @@
                                 <div class="block2">
                                     <div class="block2-pic hov-img0">
                                         <img src="{{ product.image.url }}" alt="IMG-PRODUCT" class="fixed-size-image">
-                                        <a href="{% url 'products:detail_product' product.id %}"
+                                        <a href="{% url 'products:quick_product' product.id %}"
                                            class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 ">
                                             Quick View
                                         </a>
@@ -148,7 +144,7 @@
 
                                     <div class="block2-txt flex-w flex-t p-t-14">
                                         <div class="block2-txt-child1 flex-col-l ">
-                                            <a href="{% url 'products:detail_product' product.id %}"
+                                            <a href="{% url 'products:quick_product' product.id %}"
                                                class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
                                                 {{ product.title }}
                                             </a>
@@ -157,10 +153,6 @@
 													{{ product.price }}
 												</span>
                                         </div>
-                                        <a href="{% url 'products:detail_product' product.id %}"
-                                           class="btn mb-3 mr-3 btn-indigo">
-                                            <button class="btn btn-dark-blue btn-rounded"> Buy Now </button>
-                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -181,7 +173,7 @@
                                 <div class="block2">
                                     <div class="block2-pic hov-img0">
                                         <img src="{{ product.image.url }}" alt="IMG-PRODUCT" class="fixed-size-image">
-                                        <a href="{% url 'products:detail_product' product.id %}"
+                                        <a href="{% url 'products:quick_product' product.id %}"
                                            class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 ">
                                             Quick View
                                         </a>
@@ -189,7 +181,7 @@
 
                                     <div class="block2-txt flex-w flex-t p-t-14">
                                         <div class="block2-txt-child1 flex-col-l ">
-                                            <a href="{% url 'products:detail_product' product.id %}"
+                                            <a href="{% url 'products:quick_product' product.id %}"
                                                class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
                                                 {{ product.title }}
                                             </a>
@@ -198,10 +190,6 @@
 													{{ product.price }}
 												</span>
                                         </div>
-                                        <a href="{% url 'products:detail_product' product.id %}"
-                                           class="btn mb-3 mr-3 btn-indigo">
-                                            <button class="btn btn-dark-blue btn-rounded"> Buy Now </button>
-                                        </a>
                                     </div>
                                 </div>
                             </div>

@@ -1,5 +1,5 @@
 {% load static %}
-
+{% load template_tags %}
 <header>
     <!-- Header desktop -->
     <div class="container-menu-desktop">
@@ -14,7 +14,7 @@
                 <div class="menu-desktop">
                     <ul class="main-menu">
                         <li>
-                            <a href="">Home</a>
+                            <a href="{% url 'products:home' %}">Home</a>
                         </li>
                         <li>
                             <a href="">My Orders</a>
@@ -62,16 +62,12 @@
                         <i class="zmdi zmdi-search"></i>
                     </div>
                     {% if request.user.is_authenticated %}
-                    <a href=""
+                    <a href="{% url 'products:cart_detail' %}"
                        class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart"
-                       data-notify="">
+                       data-notify="{{ request.user|cart_item_count }}">
                         <i class="zmdi zmdi-shopping-cart"></i>
                     </a>
                     {% endif %}
-                    <a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti"
-                       data-notify="0">
-                        <i class="zmdi zmdi-favorite-outline"></i>
-                    </a>
                 </div>
             </nav>
         </div>
