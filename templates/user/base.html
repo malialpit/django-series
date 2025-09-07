@@ -2,26 +2,46 @@
 {% load static %}
 <html lang="en">
 <head>
-	<title>{% block title %}{% endblock %}</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="icon" type="image/png" href="{% static 'user/images/icons/favicon.png' %}"/>
-	{% include 'user/css.html' %}
-	{% block css %}{% endblock %}
+    <title>{% block title %}{% endblock %}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="{% static 'user/images/icons/favicon.png' %}"/>
+    {% include 'user/css.html' %}
+    {% block css %}{% endblock %}
 </head>
 <body class="animsition">
-	<!-- Header -->
-    {% include 'user/header.html' %}
-	{% block content %}{% endblock%}
-	<!-- Footer -->
-    {% include 'user/footer.html' %}
-	<!-- Back to top -->
-	<div class="btn-back-to-top" id="myBtn">
+<!-- Header -->
+{% include 'user/header.html' %}
+{% if messages %}
+<div class="container mt-3">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade in " role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% block content %}{% endblock%}
+<!-- Footer -->
+{% include 'user/footer.html' %}
+<!-- Back to top -->
+<div class="btn-back-to-top" id="myBtn">
 		<span class="symbol-btn-back-to-top">
 			<i class="zmdi zmdi-chevron-up"></i>
 		</span>
-	</div>
-    {% include 'user/js.html' %}
-    {% block js %}{% endblock %}
+</div>
+{% include 'user/js.html' %}
+<script>
+	window.onload = function() {
+	   setTimeout(function (){
+	   $(".alert").alert('close');
+
+	   },3000);
+	};
+</script>
+{% block js %}{% endblock %}
 </body>
 </html>
