@@ -2,6 +2,7 @@ from time import sleep
 
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 from phonenumber_field.modelfields import PhoneNumberField
 
 from products.models import Product
@@ -129,3 +130,30 @@ class OrderItem(TimeStamp):
         discount = self.get_coupon_discount()
         return total - discount if discount else total
 
+
+class Payment(TimeStamp):
+    payment_id = models.AutoField(primary_key=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    merchant_id = models.CharField(max_length=100)
+    merchant_transaction_id = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.merchant_id}"
+
+
+class Transaction(TimeStamp):
+    transaction_id = models.AutoField(primary_key=True)
+    payment = models.ForeignKey(Payment, on_delete=models.CASCADE)
+    PAYMENT_STATUS = (
+    (1, 'SUCCESS'),
+    (2, 'FAILURE'),
+    (3, 'PENDING'),
+    )
+    payment_status = models.CharField(choices=PAYMENT_STATUS, default=3, max_length=4)
+    razorpay_order_id = models.CharField(max_length=500, null=True, blank=True)
+    razorpay_payment_id = models.CharField(max_length=500, null=True, blank=True)
+    razorpay_signature = models.CharField(max_length=500, null=True, blank=True)
+    datetime_of_payment = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"{self.transaction_id}"

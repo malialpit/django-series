@@ -1,0 +1,29 @@
+{% extends 'orders/payment-base.html' %}
+{% block content %}
+<form method="POST">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        debugger
+  var options = {
+    "key": "{{context.razorpay_merchant_id}}", // Enter the Key ID generated from the Dashboard
+    "amount": "{{context.amount}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "Kalki Fashion",
+    "description": "Test Transaction",
+    "order_id": "{{context.order_id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "callback_url": "http://" + "127.0.0.1:8000" + "/orders/callback/",
+    "prefill": {
+      "name": "{{request.user.name}}",
+      "email": "{{request.user.email}}",
+      "contact": "+91" + "{{request.user.phone}}"
+    },
+    "theme": {
+      "color": "#3399cc"
+    }
+  };
+  var rzp1 = new Razorpay(options);
+    rzp1.open();
+</script>
+    <input type="hidden" custom="Hidden Element" name="hidden">
+</form>
+{% endblock %}
