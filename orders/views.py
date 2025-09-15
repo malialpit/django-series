@@ -1,13 +1,21 @@
+from io import BytesIO
+
 import razorpay
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.core.mail import EmailMultiAlternatives
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
+from django.template.loader import get_template
 from django.utils import timezone
+from django.utils.translation.trans_real import translation
+from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from razorpay.errors import SignatureVerificationError
+from xhtml2pdf import pisa
 
 from ecommerce import settings
+from ecommerce.wsgi import application
 from orders.forms import CheckoutForm, CouponForm
 from orders.models import Cart, Order, Coupon, OrderItem, Payment, Transaction
 
@@ -180,6 +188,7 @@ def callback(request):
                 return render(request, "orders/payment-failed.html")
             payment = Payment.objects.get(payment_id=transaction.payment.payment_id)
             order = Order.objects.get(order_id=payment.order.order_id)
+            items = OrderItem.objects.filter(order=order.order_id)
             transaction.razorpay_payment_id = params_dict["razorpay_payment_id"]
             transaction.razorpay_signature = params_dict["razorpay_signature"]
             transaction.razorpay_order_id = params_dict["razorpay_order_id"]
@@ -187,9 +196,78 @@ def callback(request):
             transaction.datetime_of_payment = timezone.now()
             transaction.payment.order.order_status = "RECEIVED"
             transaction.save()
+            pdb_bytes, filename = generate_invoice_pdf(order, items, transaction)
+            mail_subject = 'Order Details'
+            conext_dict = {
+                'user': order.user,
+                'order_id': str(order),
+                'order': items,
+            }
+            template = get_template('orders/emailinvoice.html')
+            message = template.render(conext_dict)
+            to_email = order.user.email
+            email = EmailMultiAlternatives(
+                mail_subject,
+                "Hello",
+                settings.EMAIL_HOST_USER,
+                [to_email]
+            )
+            email.attach_alternative(message, "text/html")
+            email.attach(filename, pdb_bytes, 'application/pdf')
+            email.send(fail_silently=False)
             return render(request, "orders/payment-success.html", {"order": transaction.payment.order})
 
         except SignatureVerificationError:
             return render(request, "orders/payment-failed.html")
 
     return None
+
+
+def generate_invoice_pdf(order, items, transaction=None):
+    """Generate invoice pdf"""
+    context = {
+        "first_name": order.user.first_name,
+        "last_name": order.user.last_name,
+        "order_id": str(order),
+        "transaction_id": transaction.razorpay_payment_id if transaction else None,
+        "user_email": order.user.email,
+        "phone_number": getattr(order.billing_address, "phone_number", ""),
+        "date": order.ordered_date,
+        "items": items,
+        "billing_address": getattr(order.billing_address, "street_address", ""),
+        "city": getattr(order.billing_address, "city", ""),
+        "state": getattr(order.billing_address, "state", ""),
+        "country": getattr(order.billing_address, "country", ""),
+        "s_billing_address": getattr(order.billing_address, "s_street_address", ""),
+        "s_state": getattr(order.billing_address, "s_state", ""),
+        "s_country": getattr(order.billing_address, "s_country", ""),
+        "sub_total": order.get_subtotal,
+        "discount": order.get_discount,
+        "total": order.get_total,
+    }
+
+    template = get_template('orders/invoice.html')
+    html = template.render(context)
+    result = BytesIO()
+    pisa_status = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+
+    if pisa_status.err:
+        return None, None
+
+    pdf_bytes = result.getvalue()
+    filename = f"Invoice_{order}.pdf"
+    return pdf_bytes, filename
+
+
+class GenerateInvoice(View):
+    def get(self, request, order_id, *args, **kwargs):
+        order = Order.objects.get(order_id=order_id, user=request.user, ordered=True)
+        items = OrderItem.objects.filter(order=order_id)
+        payment = Payment.objects.get(order_id=order_id)
+        transaction = Transaction.objects.get(payment=payment.payment_id, payment_status=1)
+        pdb_bytes, filename = generate_invoice_pdf(order, items, transaction)
+        if pdb_bytes:
+            response = HttpResponse(pdb_bytes, content_type="application/pdf")
+            response['Content-Disposition'] = f"attachment; filename={filename}"
+            return response
+        return HttpResponse("Not Found")

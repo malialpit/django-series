@@ -9,5 +9,6 @@ urlpatterns = [
     path('coupon/', views.coupon, name='coupon'),
     path('payment/', views.payment, name='payment'),
     path('callback/', views.callback, name='callback'),
+    path('generate-invoice/<int:order_id>/', views.GenerateInvoice.as_view(), name='generate_invoice'),
 
 ]
