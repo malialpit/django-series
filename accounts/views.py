@@ -6,12 +6,29 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.shortcuts import render, redirect
 
 from accounts.forms import SignUpForm
+from orders.models import Transaction, Order
+from products.models import Product
 
 
 # Create your views here
 @login_required
 def dashboard(request):
-    return render(request, 'base/base.html')
+    product = Product.objects.filter(is_active=True, is_deleted=False).order_by('id')
+    balance = Transaction.objects.filter(payment_status=1)
+    sale = Order.objects.filter(order_status='DELIVERED')
+    delivery = Order.objects.filter(order_status='UPDATE')
+    total_product = product.count()
+    total_balance = sum(t.payment.order.get_total for t in balance)
+    total_sale = sale.count()
+    total_deliveries = delivery.count()
+    context = {
+        'total_product':total_product,
+        'total_balance':total_balance,
+        'total_sale':total_sale,
+        'total_deliveries':total_deliveries
+
+    }
+    return render(request, 'accounts/dashboard.html', context)
 
 
 def login_view(request):

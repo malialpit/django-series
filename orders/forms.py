@@ -1,6 +1,6 @@
 from django import forms
 
-from orders.models import BillingAddress
+from orders.models import BillingAddress, Order
 
 
 class CouponForm(forms.Form):
@@ -31,3 +31,24 @@ class CheckoutForm(forms.ModelForm):
     class Meta:
         model = BillingAddress
         exclude = ['user', ]
+
+
+class OrderStatusForm(forms.ModelForm):
+    STATUS = (
+        ('DELIVERED', 'Order has been Delivered'),
+        ('RECEIVED', 'Order request Received'),
+        ('REFUND', 'Apply for Refund'),
+        ('GRANTED', 'Order Refund Granted'),
+        ('UPDATE', 'Order Status Will Be Update Soon'),
+    )
+    order_status = forms.ChoiceField(label='Order Status', widget=forms.Select, choices=STATUS)
+
+    class Meta:
+        model = Order
+        fields = ['order_status', ]
+
+        widgets = {
+            'order_status': forms.SelectMultiple(attrs={
+                'class:': 'block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input',
+            }),
+        }

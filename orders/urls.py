@@ -10,5 +10,8 @@ urlpatterns = [
     path('payment/', views.payment, name='payment'),
     path('callback/', views.callback, name='callback'),
     path('generate-invoice/<int:order_id>/', views.GenerateInvoice.as_view(), name='generate_invoice'),
+    path('order-status/<int:pk>/', views.UpdateOrderStatus.as_view(), name='order_status'),
+    path('manage-orders/', views.manage_orders, name='manage_orders'),
+    path('orders/', views.orders, name='orders'),
 
 ]

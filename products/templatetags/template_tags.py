@@ -19,3 +19,9 @@ def cart_item_count(user):
         if qs.exists():
             return qs.count()
     return 0
+
+
+@register.filter
+def get_item(value, arg):
+    """Retrieve dictionary value using the key"""
+    return value.get(arg)

@@ -3,20 +3,23 @@ from io import BytesIO
 import razorpay
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import EmailMultiAlternatives
+from django.core.paginator import Paginator
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.template.loader import get_template
+from django.urls import reverse_lazy
 from django.utils import timezone
 from django.utils.translation.trans_real import translation
-from django.views import View
+from django.views import View, generic
 from django.views.decorators.csrf import csrf_exempt
 from razorpay.errors import SignatureVerificationError
 from xhtml2pdf import pisa
 
 from ecommerce import settings
 from ecommerce.wsgi import application
-from orders.forms import CheckoutForm, CouponForm
+from orders.forms import CheckoutForm, CouponForm, OrderStatusForm
 from orders.models import Cart, Order, Coupon, OrderItem, Payment, Transaction
 
 razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_ID, settings.RAZORPAY_ACCOUNT_ID))
@@ -271,3 +274,80 @@ class GenerateInvoice(View):
             response['Content-Disposition'] = f"attachment; filename={filename}"
             return response
         return HttpResponse("Not Found")
+
+
+class UpdateOrderStatus(LoginRequiredMixin, generic.UpdateView):
+    model = Order
+    template_name = "orders/order-status.html"
+    form_class = OrderStatusForm
+    login_url = '/login/'
+    success_url = reverse_lazy('orders:manage_orders')
+
+
+@login_required()
+def manage_orders(request):
+    order_no = request.GET.get('order_no', '')
+    payment_id = request.GET.get('payment_id', '')
+    status = request.GET.get('status', 'ALL')
+
+    orders = Order.objects.all()
+
+    if order_no:
+        orders = orders.filter(order_id__icontains=order_no)
+    if payment_id:
+        transaction = Transaction.objects.filter(
+            razorpay_payment_id__icontains=payment_id
+        )
+        order_ids = transaction.values_list("payment__order__order_id", flat=True)
+        orders = orders.filter(order_id__in=order_ids)
+
+    if status != 'ALL':
+        if status in ['DELIVERED', 'RECEIVED', 'REFUND', 'GRANTED', 'UPDATE']:
+            orders = orders.filter(order_status=status)
+        elif status == 'PAYMENT_SUCCESS':
+            orders = orders.filter(payment__transaction__payment_status='1')
+        elif status == 'PAYMENT_FAILED':
+            orders = orders.filter(payment__transaction__payment_status='2')
+
+    paginator = Paginator(orders, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    order_ids = page_obj.object_list.values_list('order_id', flat=True)
+    transactions = Transaction.objects.filter(payment__order__order_id__in=order_ids)
+    transactions_dict = {}
+    for transaction in transactions:
+        transactions_dict.setdefault(transaction.payment.order.order_id, []).append(transaction)
+
+    context = {
+        'order': order_ids,
+        'transaction': transactions_dict,
+        'page_obj': page_obj,
+        'order_no': order_no,
+        'payment_id': payment_id,
+        'status': status,
+    }
+    return render(request, 'orders/manage-orders.html', context)
+
+
+@login_required()
+def orders(request):
+    orders = Order.objects.filter(user=request.user)
+    paginator = Paginator(orders, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    order_ids = page_obj.object_list.values_list('order_id', flat=True)
+    transactions = Transaction.objects.filter(payment__order__order_id__in=order_ids)
+    transactions_dict = {}
+    for transaction in transactions:
+        transactions_dict.setdefault(transaction.payment.order.order_id, []).append(transaction)
+
+    context = {
+        'order': order_ids,
+        'transaction': transactions_dict,
+        'page_obj': page_obj,
+    }
+    return render(request, 'orders/orders.html', context)
+
+
+

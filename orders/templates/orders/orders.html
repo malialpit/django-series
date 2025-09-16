@@ -1,0 +1,157 @@
+{% extends 'user/base.html' %}
+
+{% block title %}My Orders{% endblock %}
+
+{% load template_tags %}
+{% load static %}
+
+{% block content %}
+<br><br>
+
+<style>
+    .table-container {
+        width: 170%;
+        overflow-x: auto;
+    }
+</style>
+
+<form class="bg0 p-t-75 p-b-85">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
+                <div class="m-l-25 m-r--38 m-lr-0-xl">
+                    <div class="wrap-table-shopping-cart">
+                        <div class="table-container">
+                            <table class="table-shopping-cart">
+                                <thead>
+                                <tr class="table_head">
+                                    <th class="column-3">&nbsp;&nbsp;Order Id</th>
+                                    <th class="column-4">Payment Id</th>
+                                    <th class="column-4">Discount</th>
+                                    <th class="column-7">Total Amount</th>
+                                    <th class="column-7">Order Status</th>
+                                    <th class="column-9">Payment Status</th>
+                                    <th class="column-10">Date</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% if page_obj %}
+                                {% for order in page_obj %}
+                                <tr class="table_row" onclick="toggleRow('{{ forloop.counter }}')">
+                                    <td class="column-3">&nbsp;&nbsp;ORDKSF{{ order.order_id }}</td>
+                                    <td class="column-4">
+                                        {% with transactions=transaction|get_item:order.order_id %}
+                                        {% if transactions %}
+                                        {% for t in transactions %}
+                                        {{ t.razorpay_payment_id }}<br>
+                                        {% endfor %}
+                                        {% else %}
+                                        No transactions
+                                        {% endif %}
+                                        {% endwith %}
+                                    </td>
+                                    <td class="column-7">{{ order.coupon }}</td>
+                                    <td class="column-7">{{ order.get_total }}</td>
+                                    <td class="column-7">
+                                        {% if order.order_status == 'DELIVERED' %}
+                                        <span class="badge bg-success">Order has been Delivered</span>
+                                        {% elif order.order_status == 'RECEIVED' %}
+                                        <span class="badge bg-info">Order Request Received</span>
+                                        {% elif order.order_status == 'REFUND' %}
+                                        <span class="badge bg-danger">Apply for Refund</span>
+                                        {% elif order.order_status == 'GRANTED' %}
+                                        <span class="badge bg-success">Order Refund Granted</span>
+                                        {% elif order.order_status == 'UPDATE' %}
+                                        <span class="badge bg-dark">Order Status Will Be Update Soon</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="column-9">
+                                        {% with transactions=transaction|get_item:order.order_id %}
+                                        {% if transactions %}
+                                        {% for t in transactions %}
+                                        {% if t.payment_status == '1' %}
+                                        <span class="badge bg-success">Success</span>
+                                        {% elif t.payment_status == '2' %}
+                                        <span class="badge bg-danger">Failed</span>
+                                        {% elif t.payment_status == '3' %}
+                                        <span class="badge bg-warning">Pending</span>
+                                        {% endif %}
+                                        {% endfor %}
+                                        {% else %}
+                                        No transactions
+                                        {% endif %}
+                                        {% endwith %}
+                                    </td>
+                                    <td class="column-10">{{ order.ordered_date }}</td>
+                                </tr>
+                                <tr id="details-{{ forloop.counter }}" class="hidden">
+                                    <td colspan="9" class="px-4 py-3 bg-gray-50 dark:bg-gray-800">
+                                        <h4 class="font-semibold text-gray-600 dark:text-gray-300">Order Items :</h4>
+                                        <table class="table-shopping-cart">
+                                            <thead>
+                                            <tr class="table_row">
+                                                <th class="column-4">
+                                                    Product
+                                                </th>
+                                                <th class="column-4">
+                                                    Quantity
+                                                </th>
+                                                <th class="column-4">
+                                                    Price
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% if order %}
+                                            {% for item in order.order_items.all %}
+                                            <tr>
+                                                <td class="px-4 py-2 border border-gray-300 dark:border-gray-600">
+                                                    {{ item.product }}
+                                                </td>
+                                                <td class="px-4 py-2 border border-gray-300 dark:border-gray-600">
+                                                    {{ item.quantity }}
+                                                </td>
+                                                <td class="px-4 py-2 border border-gray-300 dark:border-gray-600">
+                                                    {{ item.product.discount_price }}
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                            {% else %}
+                                            <tr>
+                                                <td colspan="5" class="px-4 py-3 text-center">No Record Found</td>
+                                            </tr>
+                                            {% endif %}
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center">You don't have any active orders!</td>
+                                </tr>
+                                {% endfor %}
+                                {% else %}
+                                {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}
+{%block js%}
+<script>
+    function toggleRow(id) {
+        const detailsRow = document.getElementById(`details-${id}`);
+        console.log(detailsRow);
+        if (detailsRow.classList.contains('hidden')) {
+            detailsRow.classList.remove('hidden');
+        } else {
+            detailsRow.classList.add('hidden');
+        }
+    }
+</script>
+{% endblock %}
